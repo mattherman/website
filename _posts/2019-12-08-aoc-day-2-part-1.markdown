@@ -125,3 +125,29 @@ Finally, the overall program loop we outlined earlier:
 {% endhighlight %}
 
 This ended up far more complicated than I intended, likely due to a mixture of Lisp inexperience and lack of sleep. It's probably not worth spending more time on now, but it may be an interesting problem to revisit when my Lisp skills are a little stronger. Speaking of sleep and my lack of it...I am going to bed so the second half of the exercise will have to wait.
+
+EDIT: I took a look at this the next morning. It wasn't as bad as I thought it was last night. The only change I made was to get rid of the use of symbols (`add`/`mult`/`halt`) for the opcodes. All it did was complicate things. Here's the diff of those changes:
+
+```
+ (defun addp (instruction)
+-    (equal 'add (first instruction)))
++    (equal 1 (first instruction)))
+ (defun multp (instruction)
+-    (equal 'mult (first instruction)))
++    (equal 2 (first instruction)))
+ (defun haltp (instruction)
+-    (equal 'halt (first instruction)))
+-
+-(defun value-to-intcode (intcode)
+-    (cond ((equal 1 intcode)  'add)
+-          ((equal 2 intcode)  'mult)
+-          ((equal 99 intcode) 'halt)))
++    (equal 99 (first instruction)))
+ 
+ (defun get-instruction (program pc)
+-    (let ((instruction (list (value-to-intcode (get-at program pc)))))
++    (let ((instruction (list (get-at program pc))))
+     (if (haltp instruction) 
+         instruction
+         (append 
+```
