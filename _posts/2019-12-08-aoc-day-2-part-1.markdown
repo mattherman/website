@@ -12,7 +12,7 @@ Our task is to replace the broken flight computer which uses a strange self-modi
 
 Judging from the problem statement alone, I think this challenge should be rather easy, but will take a little longer due to my lack of Lisp knowledge.
 
-We will start off once again by parsing the input file. This time it is a little more complicated because each value is comma-separated rather than on an individual line. We'll still us `ioup` to read the file and then we'll use the `string-sequence` package to perform the split:
+We will start off once again by parsing the input file. This time it is a little more complicated because each value is comma-separated rather than on an individual line. We'll still use `ioup` to read the file and then we'll use the `string-sequence` package to perform the split:
 
 {% highlight lisp %}
 (defun get-instructions ()
