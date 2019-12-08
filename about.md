@@ -4,12 +4,4 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
-
-You can find the source code for the Jekyll new theme at:
-{% include icon-github.html username="jglovier" %} /
-[jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at
-{% include icon-github.html username="jekyll" %} /
-[jekyll](https://github.com/jekyll/jekyll)
+My name's Matthew Herman. I am a software engineer from Milwaukee, WI. In my day job I work with a range of technologies: C#/.NET, SQL Server, Postgres, RabbitMQ, React, and Angular. I also work with a variety of cloud native technologies and I am an AWS Certified Solutions Architect. In my free time I enjoy exploring other programming languages such as F#, Go, Rust, and Common Lisp. My non-programming hobbies include spending time with my wife and two dogs, reading science fiction and fantasy books, and various outdoor activities such as hunting, fishing, and hiking.
