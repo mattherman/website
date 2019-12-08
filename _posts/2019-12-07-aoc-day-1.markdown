@@ -6,9 +6,9 @@ categories: [programming]
 tags: [aoc, lisp, programming]
 ---
 
-I had heard about [Advent of Code](https://adventofcode.com/) for the first time in 2018, but had never participated. This year I've decided to give it a shot and document my solutions as I go. I started learning Common Lisp a few months ago so I will be attempting to solve the puzzles using that, at least until the difficulty surpasses my skill with the language. 
+I had heard about [Advent of Code][aoc] for the first time in 2018, but had never participated. This year I've decided to give it a shot and document my solutions as I go. I started learning Common Lisp a few months ago so I will be attempting to solve the puzzles using that, at least until the difficulty surpasses my skill with the language. 
 
-If you're curious, I am using [SBCL](https://www.sbcl.org) (Steel Bank Common Lisp) and Visual Studio Code to do my development. I had started out with Emacs/SLIME since most people suggested that approach, but I ended up struggling to learn Lisp while also struggling to learn Emacs and it was just too much at once. While I'm sure it is an inferior Lisp development experience, it is meeting my needs for now.
+If you're curious, I am using [SBCL][sbcl] (Steel Bank Common Lisp) and Visual Studio Code to do my development. I had started out with Emacs/SLIME since most people suggested that approach, but I ended up struggling to learn Lisp while also struggling to learn Emacs and it was just too much at once. While I'm sure it is an inferior Lisp development experience, it is meeting my needs for now.
 
 The first puzzle introduces the plot for this years challenge: Santa is stranded at the edge of the solar system and needs your help to return to Earth in time for Christmas. That isn't all that important but it does explain some of the puzzle themes.
 
@@ -70,3 +70,6 @@ From there we can craft a condition that accomplishes the following: if the fuel
 We can use the same `get-masses` and `calculate` function as the first exercise to get the answer to this puzzle.
 
 Overall, pretty simple problems to solve, but they gave us a chance to learn a couple new things like how to load an external library using Quicklisp and how to use the `floor` function.
+
+[aoc]: https://adventofcode.com/
+[sbcl]: https://www.sbcl.org
