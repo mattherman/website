@@ -72,4 +72,4 @@ We can use the same `get-masses` and `calculate` function as the first exercise 
 Overall, pretty simple problems to solve, but they gave us a chance to learn a couple new things like how to load an external library using Quicklisp and how to use the `floor` function.
 
 [aoc]: https://adventofcode.com/
-[sbcl]: https://www.sbcl.org
+[sbcl]: http://www.sbcl.org
