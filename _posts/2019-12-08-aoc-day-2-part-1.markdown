@@ -14,28 +14,28 @@ Judging from the problem statement alone, I think this challenge should be rathe
 
 We will start off once again by parsing the input file. This time it is a little more complicated because each value is comma-separated rather than on an individual line. We'll still us `ioup` to read the file and then we'll use the `string-sequence` package to perform the split:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun get-instructions ()
     (mapcar 
         #'parse-integer 
         (split-sequence:split-sequence #\,
             (first (uiop:read-file-lines "input.txt")))))
-<% endhighlight %>
+{% endhighlight %}
 
 Now we know we will need to modify this list in place while executing the instructions. Some quick searches along the lines of "common lisp modify element of list" return a variety of solutions and none of them pretty. What that digging does get us is a suggestion to use an array instead. Common Lisp has lists AND arrays? Who would've known. Not me.
 
 If our instructions are in an array instead of a list, we can easily get and set values by index using the `aref` and `setf` functions:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (setf a (make-array 3 :element-type 'integer))
 ;; #(0 0 0)
 (setf (aref a 1) 10)
 ;; #(0 10 0)
-<% endhighlight %>
+{% endhighlight %}
 
 Our `get-instructions` function updated to return an array looks something like this:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun get-instructions ()
     (coerce
         (mapcar 
@@ -43,18 +43,18 @@ Our `get-instructions` function updated to return an array looks something like 
             (split-sequence:split-sequence #\,
                 (first (uiop:read-file-lines "input.txt"))))
         'vector))
-<% endhighlight %>
+{% endhighlight %}
 
 A `vector` is a one-dimensional array. It's unclear to me whether that is a different data type in Common Lisp or not, but that won't stop us from using it.
 
 Next we're going to create a couple helpers since the `aref` syntax I laid out above is awkward:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun get-at (arr index)
     (aref arr index))
 (defun set-at (arr index value)
     (setf (aref arr index) value))
-<% endhighlight %>
+{% endhighlight %}
 
 We're not getting much (besides a better name) with `get-at`, but I think `set-at` is an improvement.
 
@@ -64,27 +64,27 @@ Let's think about what is involved in reading an instruction first. Each instruc
 
 First we can define a `value-to-intcode` function that converts to a human-readable instruction name:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun value-to-intcode (intcode)
     (cond ((equal 1 intcode)  'add)
           ((equal 2 intcode)  'mult)
           ((equal 99 intcode) 'halt)))
-<% endhighlight %>
+{% endhighlight %}
 
 We will also create some predicates to test whether an instruction is a certain type:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun addp (instruction)
     (equal 'add (first instruction)))
 (defun multp (instruction)
     (equal 'mult (first instruction)))
 (defun haltp (instruction)
     (equal 'halt (first instruction)))
-<% endhighlight %>
+{% endhighlight %}
 
 Then we will implement the `get-instruction` function. The intent is for it to return a list containing the type of instruction and addresses (e.g. `(add 0 0 3)`):
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun get-instruction (program pc)
     (let ((instruction (list (value-to-intcode (get-at program pc)))))
     (if (haltp instruction) 
@@ -95,13 +95,13 @@ Then we will implement the `get-instruction` function. The intent is for it to r
                 (get-at program (+ pc 1))
                 (get-at program (+ pc 2))
                 (get-at program (+ pc 3)))))))
-<% endhighlight %>
+{% endhighlight %}
 
 In the `let` we immediately construct a list with the intcode value. If it isn't a halt instruction, we go ahead and append the three addresses, otherwise return it as-is. We need to handle the halt case in order to avoid potential index out of bounds errors.
 
 With that we now have something we can execute. The actual operations are rather simple, we just need to read the two input values using the addresses in our instruction, add or multiply based on the instruction type, and then write back to the output address. It ends up looking something like this:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun execute-instruction (program instruction)
     (let
         ((input1 (get-at program (second instruction)))
@@ -110,11 +110,11 @@ With that we now have something we can execute. The actual operations are rather
                     (set-at program (fourth instruction) (+ input1 input2)))
                   ((multp instruction)
                     (set-at program (fourth instruction) (* input1 input2))))))
-<% endhighlight %>
+{% endhighlight %}
 
 Finally, the overall program loop we outlined earlier:
 
-<% highlight lisp %>
+{% highlight lisp %}
 (defun execute (program)
     (let ((pc 0))
         (loop
@@ -122,6 +122,6 @@ Finally, the overall program loop we outlined earlier:
             (if (haltp instruction) (return program))
             (execute-instruction program instruction)
             (setf pc (+ pc 4)))))
-<% endhighlight %>
+{% endhighlight %}
 
 This ended up far more complicated than I intended, likely due to a mixture of Lisp inexperience and lack of sleep. It's probably not worth spending more time on now, but it may be an interesting problem to revisit when my Lisp skills are a little stronger. Speaking of sleep and my lack of it...I am going to bed so the second half of the exercise will have to wait.
