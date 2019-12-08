@@ -17,7 +17,7 @@ The initial exercise requires us implement a simple algorithm for calculating th
 
 We are then given an input file with the masses of each module. The answer is the sum of the fuel required for each.
 
-First things first - loading the file. To be honest, I had no idea how to do this in Lisp. A quick trip to Stack Overflow found me a solution, but I decided to go the easier route and use an existing library. The answer suggested "uiop" which appeared to be provided as part of ASDF, a build tool in the Common Lisp community. This also gave me a chance to learn how to include a package using Quicklisp, a Common Lisp package manager. 
+First things first - loading the file. To be honest, I have no idea how to do this in Lisp. A quick trip to Stack Overflow reveals a solution, but I decided to go the easier route and use an existing library. The answer suggested `uiop` which appears to be provided as part of ASDF, a build tool in the Common Lisp community. This also gives us a chance to learn how to include a package using Quicklisp, a Common Lisp package manager. 
 
 Since I have already installed Quicklisp it is as simple as adding the following to the top of my file:
 
@@ -71,5 +71,8 @@ We can use the same `get-masses` and `calculate` function as the first exercise 
 
 Overall, pretty simple problems to solve, but they gave us a chance to learn a couple new things like how to load an external library using Quicklisp and how to use the `floor` function.
 
+My full solution can be found on [Github][gh].
+
 [aoc]: https://adventofcode.com/
 [sbcl]: http://www.sbcl.org
+[gh]: https://github.com/mattherman/advent-of-code-2019
