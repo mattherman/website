@@ -17,3 +17,4 @@ github_username:  mattherman
 
 # Build settings
 markdown: kramdown
+theme: jekyll-theme-slate
