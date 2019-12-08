@@ -126,6 +126,8 @@ Finally, the overall program loop we outlined earlier:
 
 This ended up far more complicated than I intended, likely due to a mixture of Lisp inexperience and lack of sleep. It's probably not worth spending more time on now, but it may be an interesting problem to revisit when my Lisp skills are a little stronger. Speaking of sleep and my lack of it...I am going to bed so the second half of the exercise will have to wait.
 
+My full solution can be found on [Github][gh].
+
 EDIT: I took a look at this the next morning. It wasn't as bad as I thought it was last night. The only change I made was to get rid of the use of symbols (`add`/`mult`/`halt`) for the opcodes. All it did was complicate things. Here's the diff of those changes:
 
 ```

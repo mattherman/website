@@ -1,0 +1,38 @@
+---
+layout: post
+title:  "Advent of Code - Day 2 (Part 2)"
+date:   2017-12-08 13:20:00 -0500
+categories: [programming]
+tags: [aoc, lisp, programming]
+---
+
+The second half of the Day 2 puzzle starts off by defining terminology related to the "Intcode computer". Just for the sake of matching the terminology they use the first think I did was update a few of the symbols in the program (e.g. `instructions` -> `program-memory`, `pc` -> `ip`).
+
+I hadn't mentioned it in the last post, but the first problem had us modify some of the memory before running the program, specifically to set index 1 to the value 12 and index 2 to the value 2. It didn't make a lot of sense at the time, and still doesn't, but in this second exercise they are formalizing that concept. The value to set the first index to is the "noun" and the second one is the "verb".
+
+Considering that will be important, I've added a top-level `run` function that handles the noun/verb nonsense:
+
+{% highlight ruby %}
+(defun run (noun verb)
+    (let ((program-memory (load-program-memory)))
+    (progn
+        (set-at program-memory 1 noun)
+        (set-at program-memory 2 verb)
+        (execute program-memory))))
+{% endhighlight %}
+
+Now the goal of this exercise is to find which combination of noun and verb values (from 1 to 99 inclusive) will result in a specific value being output.
+
+This ended up being really simple. All we need to do is loop through all noun/verb combinations and test them until we find the expected output:
+
+{% highlight ruby %}
+(defun find-noun-verb (expected-output)
+    (loop named outer for x from 1 to 99 do
+        (loop for y from 1 to 99 do
+            (if (equal expected-output (run x y))
+                (return-from outer (list x y))))))
+{% endhighlight %}
+
+The fun thing about this one was learning more about Common Lisp loops. We had used a plain `loop` with a counter and `return` in the previous exercise to execute instructions, but this one required a little more complexity. The first difference is the added range clause, `for x from 1 to 99`, allowing us to loop over all the valid values. The other new part is `named outer`. This is a concept I hadn't encountered previously, but being able to give the loop a name allows us to use `return-from outer <item>` in the nested loop to break which is pretty neat.
+
+My full solution can be found on [Github][gh].
