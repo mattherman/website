@@ -36,3 +36,5 @@ This ended up being really simple. All we need to do is loop through all noun/ve
 The fun thing about this one was learning more about Common Lisp loops. We had used a plain `loop` with a counter and `return` in the previous exercise to execute instructions, but this one required a little more complexity. The first difference is the added range clause, `for x from 1 to 99`, allowing us to loop over all the valid values. The other new part is `named outer`. This is a concept I hadn't encountered previously, but being able to give the loop a name allows us to use `return-from outer <item>` in the nested loop to break which is pretty neat.
 
 My full solution can be found on [Github][gh].
+
+[gh]: https://github.com/mattherman/advent-of-code-2019
