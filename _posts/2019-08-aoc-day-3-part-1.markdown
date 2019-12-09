@@ -1,0 +1,141 @@
+---
+layout: post
+title:  "Advent of Code - Day 3 (Part 1)"
+date:   2017-12-08 20:27:00 -0500
+categories: [programming]
+tags: [aoc, lisp, programming]
+---
+
+Moving right on to Day 3! At first glance, I think this one is going to be fun. We're dealing with collections of simple vectors identified by a direction and a magnitude. For example "R10" specifies 10 units to the right. A collection of these vectors will specify the path that a wire takes. The problem involves two wires that start at the same location and our job is to determine at which points the wires collide and which of those collisions is closest to the start location or "central port". The instructions specify that this should be measured using [Manhattan distance][manhattan].
+
+> The wires twist and turn, but the two wires occasionally cross paths. To fix the circuit, you need to find the intersection point closest to the central port. Because the wires are on a grid, use the Manhattan distance for this measurement.
+
+Our input file has two lines, one for each wire, containing comma-separated values:
+
+```
+R1005,U563,R417,U509,L237,U555,R397,U414,L490,U336,...
+L1003,D878,R937,D979,R921,U572,R4,D959,L884,U394,...
+```
+
+We'll use a few familiar functions to parse this input into lists again:
+
+{% highlight lisp %}
+(defun load-path-data ()
+    (mapcar
+        #'(lambda (line) (split-sequence:split-sequence #\, line))
+        (uiop:read-file-lines "input.txt"))
+{% endhighlight %}
+
+This will read each line of the file into a list of the form `("R1005,U563,...", "L1003,D878,...")`. From there our `mapcar` lambda will split the comma-separated values transforming that into nested lists with individual values as strings `(("R1005", "U563", ...), ("L1003", "D878", ...))`.
+
+This is a good first step, but next we'll want to do something with those vector strings in order to make them a little easier to work with. Before we handle the full lists, let's write a helper that can convert a single value:
+
+{% highlight lisp %}
+(defun convert-string-to-vector (input)
+    (let 
+        ((direction (subseq input 0 1))
+         (magnitude (subseq input 1 (length input))))
+            (list
+                (cond ((equal "R" direction) 'right)
+                      ((equal "L" direction) 'left)
+                      ((equal "U" direction) 'up)
+                      ((equal "D" direction) 'down))
+                (parse-integer magnitude))))
+{% endhighlight %}
+
+Since strings are sequences, we can use `subseq` to perform a substring operation and set `direction` to the letter in the vector (R, L, U, or D) and `magnitude` to the number of units. We then generate a list containing a symbol identifying direction and the magnitude as an actual integer. This will turn something like `"R707"` into `(RIGHT 707)`.
+
+With our helper written it is very easy to convert an entire path into this format using `mapcar`:
+
+{% highlight lisp %}
+(defun convert-strings-to-vectors (path-strings)
+    (mapcar #'convert-string-to-vector path-strings))
+{% endhighlight %}
+
+Things get a little more complicated from here. We want to be able to collect the coordinates a wire visits as we apply each vector so let's see if we can write a function to do that for a single vector from a specific point. Essentially we want to go from something like `(0 0) (right 5)` to `((1 0) (2 0) (3 0) (4 0) (5 0))`. We should be able to implement this as a recursive function that walks each point.
+
+We'll define some simple functions for walking one space in each direction and then a higher-level function that accepts those walk functions and applies them a specific number of times:
+
+{% highlight lisp %}
+(defun walk-right (coord)
+    (list (+ (first coord) 1) (second coord)))
+(defun walk-left (coord)
+    (list (- (first coord) 1) (second coord)))
+(defun walk-up (coord)
+    (list (first coord) (+ (second coord) 1)))
+(defun walk-down (coord)
+    (list (first coord) (- (second coord) 1)))
+
+(defun walk (coord walkfn n)
+    (if (not (equal 0 n))
+        (let ((new-coord (funcall walkfn coord)))
+        (cons
+            new-coord
+            (walk new-coord walkfn (- n 1))))))
+{% endhighlight %}
+
+The single-step walk functions simply return a new coordinate while incrementing or decrementing one of the values. The generic `walk` function accepts one of these functions as a parameter and applies it to get the next coordinate in the path. From there, it conses that coordinate with a recursive call to `walk` in order to build up the path.
+
+Now we can define a function that takes a starting coordinate and a vector and returns all the coordinates that were visited:
+
+{% highlight lisp %}
+(defun collect-coords (starting-coord vector)
+    (walk
+        starting-coord
+        (get-walker vector)
+        (magnitude vector)))
+{% endhighlight %}
+
+Next we can write another function that consumes this one in order to collect all of the coordinates in the path:
+
+{% highlight lisp %}
+(defun get-coordinates-visited (path)
+    (reduce
+        #'(lambda (coords vector)
+            (let ((current-coord (last-element coords)))
+            (append coords (collect-coords current-coord vector))))
+        path
+        :initial-value '((0 0))))
+{% endhighlight %}
+
+Then I could use `intersection` to find the points that exist in both. However, once I got to this point I realized two separate issues. 
+
+First, the above function is pretty slow. For the first path in the input file, which ends up visiting ~150k coordinates, it takes about six seconds to execute. With the `intersection` on top of the two `get-coordinates-visited` calls it took almost five minutes to complete. 
+
+Second, after waiting for it to complete I was surprised to see only a single intersection, `(0 0)`. Huh. It turns out that `intersection` function does not work on nested lists by default. I'm guessing it uses some sort of object equality which causes `(0 0)` to still match because it is seeded as the initial value for the `reduce` call.
+
+It appears we can address the equality check pretty easily by overriding the equality check via the `:test` keyword on the `intersection` call. Here is what the function looks like when that is all put together:
+
+{% highlight lisp %}
+(defun vector-equal (v1 v2)
+    (and
+        (equal (first v1) (first v2))
+        (equal (second v1) (second v2))))
+
+(defun run ()
+    (progn
+        (setf path-data (load-path-data))
+        (setf first-path-vectors (convert-strings-to-vectors (first path-data)))
+        (setf second-path-vectors (convert-strings-to-vectors (second path-data)))
+        (apply #'min
+            (remove-if #'(lambda (x) (equal 0 x))
+                (mapcar
+                    #'manhattan-distance 
+                    (intersection 
+                        (get-coordinates-visited first-path-vectors)
+                        (get-coordinates-visited second-path-vectors)
+                        :test #'vector-equal))))))
+{% endhighlight %}
+
+Running this (and waiting 5 minutes) does get us the correct answer. Most of the time is spent finding the intersection since the collections of points are so large. Also, the `get-coordinates-visited` function relies on `last` which has O(n) time complexity. This gets called after every single walk so it really adds up.
+
+One option we have for speeding this up would be to use hash tables instead of lists. We would process the first path and build up a hash table of all of its coordinates, and then instead of doing a set intersection we would get the second paths coordinates and do lookups in the table, which would be O(1) on average. I'm not entirely sure what is going on under the hood during the `intersection` call but based on my understanding of how lists are constructed, I'm guessing it is O(n) at best.
+
+As far as eliminating the `last` call, my best bet would be to pass the hash table along to walk so it no longer needs to return the walked coordinates (it can just add them to the table immediately) and can instead return the last coordinate walked, eliminating the need to use `last` to find it.
+
+Anyways, I'm not going to pursue those improvements right now. I'll wait until I see the next exercise to decide whether it is worth the re-write.
+
+My full solution can be found on [Github][gh].
+
+[manhattan]: https://en.wikipedia.org/wiki/Taxicab_geometry
+[gh]: https://github.com/mattherman/advent-of-code-2019

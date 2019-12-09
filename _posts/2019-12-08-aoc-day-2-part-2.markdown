@@ -12,7 +12,7 @@ I hadn't mentioned it in the last post, but the first problem had us modify some
 
 Considering that will be important, I've added a top-level `run` function that handles the noun/verb nonsense:
 
-{% highlight ruby %}
+{% highlight lisp %}
 (defun run (noun verb)
     (let ((program-memory (load-program-memory)))
     (progn
@@ -25,7 +25,7 @@ Now the goal of this exercise is to find which combination of noun and verb valu
 
 This ended up being really simple. All we need to do is loop through all noun/verb combinations and test them until we find the expected output:
 
-{% highlight ruby %}
+{% highlight lisp %}
 (defun find-noun-verb (expected-output)
     (loop named outer for x from 1 to 99 do
         (loop for y from 1 to 99 do
