@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "Advent of Code - Day 3 (Part 2)"
+date:   2017-12-08 21:26:00 -0500
+categories: [programming]
+tags: [aoc, lisp, programming]
+---
+
+I finished the second exercise and I definitely didn't make my solution any faster like I said I might. I may return to it eventually but for now I'm still playing catch up on the challenges.
+
+In the second part of this day's puzzle they are switching up the distance calculation. Instead of looking for the intersection with the shortest Manhattan distance, we will now need to find the shortest "signal" distance. Basically, the intersection at which each wire's path is the shortest.
+
+We can measure this distance using the `position` function which returns the (first) index of a specific value in a list. We'll also re-use our `vector-equal` function again for the comparisons:
+
+{% highlight lisp %}
+(defun signal-distance (coords target)
+    (position target coords :test #'vector-equal))
+(defun combined-signal-distance (coords1 coords2 coordinate)
+    (+ (signal-distance coords1 coordinate) (signal-distance coords2 coordinate)))
+{% endhighlight %}
+
+Then it is just a small change to swap out the Manhattan distance mapping for our own:
+
+{% highlight lisp %}
+(defun run ()
+    (progn
+        (setf path-data (load-path-data "input.txt"))
+        (setf first-path-vectors (convert-strings-to-vectors (first path-data)))
+        (setf second-path-vectors (convert-strings-to-vectors (second path-data)))
+        (setf first-path-coordinates (get-coordinates-visited first-path-vectors))
+        (setf second-path-coordinates (get-coordinates-visited second-path-vectors))
+        (apply #'min
+            (mapcar
+                #'(lambda (target)
+                    (combined-signal-distance 
+                        first-path-coordinates
+                        second-path-coordinates
+                        target))
+                (remove-if #'(lambda (x) (vector-equal '(0 0) x))
+                    (intersection 
+                        first-path-coordinates
+                        second-path-coordinates
+                        :test #'vector-equal))))))
+{% endhighlight %}
+
+My full solution can be found on [Github][gh].
+
+[gh]: https://github.com/mattherman/advent-of-code-2019
