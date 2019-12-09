@@ -104,7 +104,7 @@ First, the above function is pretty slow. For the first path in the input file, 
 
 Second, after waiting for it to complete I was surprised to see only a single intersection, `(0 0)`. Huh. It turns out that `intersection` function does not work on nested lists by default. I'm guessing it uses some sort of object equality which causes `(0 0)` to still match because it is seeded as the initial value for the `reduce` call.
 
-It appears we can address the equality check pretty easily by overriding the equality check via the `:test` keyword on the `intersection` call. Here is what the function looks like when that is all put together:
+It appears we can address the equality check pretty easily by setting the `:test` keyword on the `intersection` call. Here is what the function looks like when that is all put together:
 
 {% highlight lisp %}
 (defun vector-equal (v1 v2)
