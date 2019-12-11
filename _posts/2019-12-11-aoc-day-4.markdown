@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "Advent of Code - Day 4"
+date:   2017-12-11 16:19:00 -0500
+categories: [programming]
+tags: [aoc, lisp, programming]
+---
+
+If the length of the puzzle description is at all correlated with difficulty, this one should be pretty simple. The goal is to identify "passwords" that meet specific requirements. The passwords must be six numeric digits long, each digit must be greater than or equal to the previous one, and there must be at least two adjacent digits that are equal to each other. For example, `122345` would be valid but `123456` and `123324` would not. We are also given a specific range of numbers to search as input.
+
+The first thing we will want to do is split the numbers into a collection of digits in order to perform operations on them more easily. I figure there should be a simpler way to do this, but the best I found involved converting the number to a string, looping over the characters, and converting each individual character back to an integer:
+
+{% highlight lisp %}
+(defun int-to-list (val)
+    (loop for c across (write-to-string val) collect (digit-char-p c)))
+{% endhighlight }
+
+Maybe not the most performant, but it will have to do for now.
+
+We basically have two conditions that we need to test on all password candidates: that they increase left to right and that they contain at least one sequence of digits. Validating the increasing values can be done with a simple `apply` call:
+
+{% highlight lisp %}
+(defun increasing (digits)
+    (apply #'<= digits))
+{% endhighlight %}
