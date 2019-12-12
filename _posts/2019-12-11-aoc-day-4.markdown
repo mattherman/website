@@ -13,7 +13,7 @@ The first thing we will want to do is split the numbers into a collection of dig
 {% highlight lisp %}
 (defun int-to-list (val)
     (loop for c across (write-to-string val) collect (digit-char-p c)))
-{% endhighlight }
+{% endhighlight %}
 
 Maybe not the most performant, but it will have to do for now.
 
