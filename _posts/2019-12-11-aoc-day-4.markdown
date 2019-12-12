@@ -8,7 +8,7 @@ tags: [aoc, lisp, programming]
 
 If the length of the puzzle description is at all correlated with difficulty, this one should be pretty simple. The goal is to identify "passwords" that meet specific requirements. The passwords must be six numeric digits long, each digit must be greater than or equal to the previous one, and there must be at least two adjacent digits that are equal to each other. For example, `122345` would be valid but `123456` and `123324` would not. We are also given a specific range of numbers to search as input.
 
-The first thing we will want to do is split the numbers into a collection of digits in order to perform operations on them more easily. I figure there should be a simpler way to do this, but the best I found involved converting the number to a string, looping over the characters, and converting each individual character back to an integer:
+The first thing we will want to do is split the numbers into a collection of digits in order to perform operations on them more easily. I figure there should be a simpler way to do this, but the best I found involved converting the number to a string, looping over the characters, and converting each individual character back to an integer.
 
 {% highlight lisp %}
 (defun int-to-list (val)
@@ -17,14 +17,14 @@ The first thing we will want to do is split the numbers into a collection of dig
 
 Maybe not the most performant, but it will have to do for now.
 
-We basically have two conditions that we need to test on all password candidates: that they increase left to right and that they contain at least one sequence of digits. Validating the increasing values can be done with a simple `apply` call:
+We basically have two conditions that we need to test on all password candidates: that they increase left to right and that they contain at least one sequence of digits. Validating the increasing values can be done with a simple `apply` call.
 
 {% highlight lisp %}
 (defun increasing (digits)
     (apply #'<= digits))
 {% endhighlight %}
 
-To validate that the potential password includes a sequence of matching digits we'll first write a function that can determine all the sequences present in the value. Our goal is to take a list of digits as input and output a list of sequences. For example, `(1 2 2 3 4 4)` would return `((4 4) (3) (2 2) (1))`. This can be accomplised via `reduce` with a lambda that performs the accumulation of sequences. That function ends up looking like:
+To validate that the potential password includes a sequence of matching digits we'll first write a function that can determine all the sequences present in the value. Our goal is to take a list of digits as input and output a list of sequences. For example, `(1 2 2 3 4 4)` would return `((4 4) (3) (2 2) (1))`. This can be accomplished via `reduce` with a lambda that performs the accumulation of sequences.
 
 {% highlight lisp %}
 (defun split-sequences (digits)
@@ -39,17 +39,17 @@ To validate that the potential password includes a sequence of matching digits w
 
 Let's deconstruct that lambda with a few examples. Since we're expecting a list of lists, the `(car (car acc))` in the condition will be matching the current digit with the last one that was collected (or `nil`). So if `acc` equals `((2) (1))`, then `(car (car acc))` = `2`. 
 
-Now imagine the next digit is also a value of `2`. The condition will return true and we'll follow the first path. If we resolve those forms iteratively it would look like this:
+Now imagine the next digit is also a value of `2`. The condition will return true and we'll follow the first path. Let's see what it would look like if we resolved those forms iteratively.
 
 ```
-(cons (cons digit (car acc))        (cdr acc))
+(cons (cons digit (car acc))       (cdr acc))
 (cons (cons 2     (car ((2) (1)))) (cdr ((2) (1))))
-(cons (cons 2     (2))              (1)))
-(cons (2 2)                         (1))
+(cons (cons 2     (2))             (1)))
+(cons (2 2)                        (1))
 ((2 2) (1))
 ```
 
-So `acc` would be equal to `((2 2) (1))`. If the next digit is a `3` we would follow the second branch of logic and the following would occur:
+So `acc` would now be equal to `((2 2) (1))`. If the next digit is a `3` we would follow the second branch of logic.
 
 ```
 (cons (list digit) acc)
@@ -58,14 +58,14 @@ So `acc` would be equal to `((2 2) (1))`. If the next digit is a `3` we would fo
 ((3) (2 2) (1))
 ```
 
-Now that we have a way of splitting the list of digits into a list of sequences we just need to test whether any of the sequences have a length greater than one. With the help of a `any` helper function that looks like this:
+Now that we have a way of splitting the list of digits into a list of sequences we just need to test whether any of the sequences have a length greater than one. We can accomplish this with the help of a `any` function.
 
 {% highlight lisp %}
 (defun includes-sequence-of-n (digits n)
     (any #'(lambda (x) (>= (length x) n)) (split-sequences digits)))
 {% endhighlight %}
 
-With our two test functions AND'd together and a loop over our input range we're able to get our answer.
+Finally, with our two test functions AND'd together and a loop over our input range we're able to get our answer.
 
 {% highlight lisp %}
 (defun test (password)
@@ -81,7 +81,7 @@ With our two test functions AND'd together and a loop over our input range we're
 
 The follow up exercise only requires us to change a single line of code. The new requirement is that the sequence of two matching digits cannot be part of a larger sequence. For example, `122234` would be invalid but `122333` would be fine.
 
-In order to test this we update our `includes-sequence-of-n` function to require a sequence of exactly two digits:
+In order to test this we update our `includes-sequence-of-n` function to require a sequence of exactly two digits.
 
 {% highlight lisp %}
 (defun includes-sequence-of-n (digits n)
