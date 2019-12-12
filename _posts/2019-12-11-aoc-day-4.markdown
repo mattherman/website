@@ -44,7 +44,7 @@ Now imagine the next digit is also a value of `2`. The condition will return tru
 {% highlight lisp %}
 (cons (cons digit (car acc))       (cdr acc))
 (cons (cons 2     (car ((2) (1)))) (cdr ((2) (1))))
-(cons (cons 2     (2))             (1)))
+(cons (cons 2     (2))             (1))
 (cons (2 2)                        (1))
 ((2 2) (1))
 {% endhighlight %}
