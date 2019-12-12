@@ -41,22 +41,22 @@ Let's deconstruct that lambda with a few examples. Since we're expecting a list 
 
 Now imagine the next digit is also a value of `2`. The condition will return true and we'll follow the first path. Let's see what it would look like if we resolved those forms iteratively.
 
-```
+{% highlight lisp %}
 (cons (cons digit (car acc))       (cdr acc))
 (cons (cons 2     (car ((2) (1)))) (cdr ((2) (1))))
 (cons (cons 2     (2))             (1)))
 (cons (2 2)                        (1))
 ((2 2) (1))
-```
+{% endhighlight %}
 
 So `acc` would now be equal to `((2 2) (1))`. If the next digit is a `3` we would follow the second branch of logic.
 
-```
+{% highlight lisp %}
 (cons (list digit) acc)
 (cons (list 3)     ((2 2) (1)))
 (cons (3)          ((2 2) (1)))
 ((3) (2 2) (1))
-```
+{% endhighlight %}
 
 Now that we have a way of splitting the list of digits into a list of sequences we just need to test whether any of the sequences have a length greater than one. We can accomplish this with the help of a `any` function.
 
