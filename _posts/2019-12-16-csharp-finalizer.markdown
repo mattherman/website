@@ -106,7 +106,7 @@ Everything in the `using` block will be wrapped in an implicit `try`/`finally` a
 
 Most of the time programmers will not need to implement `IDisposable` themselves. A `Dispose` method (and finalizer) is only necessary when the class contains resources that are not managed by the runtime or contains other managed objects that implement `IDisposable`. While implementing this pattern is rare, it is important to understand when it is necessary in order to ensure that resources that are no longer needed get cleaned up properly.
 
-## Additional Reading
+# Additional Reading
 * [Finalizers (Destructors)][destructors]
 * [System.Object.Finalize][object-finalize]
 * [Garbage Collection Fundamentals][gc]
