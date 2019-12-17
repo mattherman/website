@@ -109,8 +109,10 @@ Most of the time programmers will not need to implement `IDisposable` themselves
 # Additional Reading
 * [Finalizers (Destructors)][destructors]
 * [System.Object.Finalize][object-finalize]
+* [Implementing Dispose][dispose]
 * [Garbage Collection Fundamentals][gc]
 
 [object-finalize]: https://docs.microsoft.com/en-us/dotnet/api/system.object.finalize?view=netframework-4.8
 [destructors]: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/destructors
+[dispose]: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose
 [gc]: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals
