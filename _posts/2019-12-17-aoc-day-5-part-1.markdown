@@ -6,7 +6,9 @@ categories: [programming]
 tags: [aoc, lisp, programming]
 ---
 
-The Day 5 puzzle heralds our (hopefully triumphant) return to intcode. We will be modifying our original intcode computer to handle a few new instructions as well as "parameter modes". Up until now our computer implicitly supported a single parameter mode: position mode. This means that the value of a parameter tells you to look at that address (i.e. index) for its value. We will need to be able to support an additional parameter mode called immediate where the parameter itself is the value. These modes are encoded in the instruction itself. For example, an instruction of `CBAXX` represents an instruction XX (such as `02` or `99`) with three parameters where A is the mode (0 for position, 1 for immediate) of the first parameter, B the mode of the second, and C the mode of the third. Any leading zeroes can also be omitted with the assumption that they are mode 0, so the instruction `2`, would have the same meaning as `00002`. We can also assume that any parameters that involve writing/setting a value are in position mode.
+The Day 5 puzzle heralds our (hopefully triumphant) return to intcode. We will be modifying our original intcode computer to handle a few new instructions as well as "parameter modes". Up until now our computer implicitly supported a single parameter mode: position mode. This means that the value of a parameter tells you to look at that address (i.e. index) for its value. We will need to be able to support an additional parameter mode called immediate where the parameter itself is the value. 
+
+These modes are encoded directly in the instruction. For example, an instruction of `CBAXX` represents an instruction XX (such as `02` or `99`) with three parameters where A is the mode (0 for position, 1 for immediate) of the first parameter, B the mode of the second, and C the mode of the third. Any leading zeroes can also be omitted with the assumption that they are mode 0, so the instruction `2`, would have the same meaning as `00002`. We can also assume that any parameters that involve writing/setting a value are in position mode.
 
 In addition to parameter modes we will be supporting two new instructions. They are essentially a read and write that work based on an "input" value which is defined in the puzzle. The write instruction (opcode `03`) takes a single parameter and writes the input value to that position and the read instruction (opcode `04`) will output the value at the position of its parameter.
 
@@ -18,7 +20,7 @@ If we're going to support these changes we'll need to overhaul how we read instr
     (list (reverse (subseq opcode-list 0 max-mode-length)) (subseq opcode-list max-mode-length))))
 {% endhighlight %}
 
-This function is a little complicated but is easier to understand if we break it down into steps. Imagine we are parsing the `1002` instruction. We first use the `int-to-list` helper to turn it into `(1 0 0 2)`. Since the instructions can omit leading zeroes for position mode parameters, we'll want to add those back in so that we have a consistent format. The `pad-list-to-n` helper assists with that and turns the list into `(0 1 0 0 2)`. Then we just divide the list up into modes and opcode and smash it back together resulting in `((0 1 0) (0 2))`. The first list are the parameter modes and the second is the opcode. Also note that we've reversed the first list so that the modes are in the order of the parameters themselves.
+This function is a little complicated but is easier to understand if we break it down into steps. Imagine we are parsing the `1002` instruction. We first use the `int-to-list` helper to turn it into `(1 0 0 2)`. Since the instructions can omit leading zeroes for position mode parameters, we'll want to add those back in so that we have a consistent format. The `pad-list-to-n` helper assists with that and turns the list into `(0 1 0 0 2)`. Then we just divide the list up into modes and opcode and smash it back together resulting in `((0 1 0) (0 2))`. The first list is the parameter modes and the second is the opcode. Also note that we've reversed the first list so that the modes are in the order of the parameters themselves.
 
 To execute one of these instructions we'll need to combine it with the parameters first. The goal here is to get to a point where we have an opcode along with pairs of parameters and their nodes. For example an instruction with parameters like `1002, 4, 3, 4` could give us something like `((0 2) (0 4) (1 3) (0 4))`. Before we can combine the parameters with modes however, we will need to parse them out of the program.
 
@@ -28,7 +30,7 @@ To execute one of these instructions we'll need to combine it with the parameter
     (loop for index from (+ ip 1) to (+ ip num-parameters) collect (get-at program index))))
 {% endhighlight %}
 
-The function calculates the number of parameters to extract based on the instruction size. The `2` opcode has a size of 4 (one opcode plus three parameters). Using that value we can use the loop to collect the next N values starting at the current instruction pointer.
+The function calculates the number of parameters to extract based on the instruction size. The `2` instruction has a size of 4 (one opcode plus three parameters). Using that value we can use the loop to collect the next N values starting at the current instruction pointer.
 
 Now that we've parsed both the opcode and the parameters, we can attempt to put them together.
 
@@ -43,9 +45,9 @@ Now that we've parsed both the opcode and the parameters, we can attempt to put 
         (mapcar #'list modes (get-parameters program ip opcode)))))
 {% endhighlight %}
 
-The `mapcar` in the function is a neat little trick. Mapping `list` over multiple lists performs a zip of those lists. So if we hade modes `(0 1 0)` and parameters `(4 3 4)`, it will neatly zip them together to get `((0 4) (1 3) (0 4)). We then combine that with the opcode to get the structure we laid out above.
+The `mapcar` in the function is a neat little trick. Mapping `list` over multiple lists performs a zip of those lists. So if we hade modes `(0 1 0)` and parameters `(4 3 4)`, it will neatly zip them together to get `((0 4) (1 3) (0 4))`. We then combine that with the opcode to get the structure we laid out above.
 
-So we now have a way to retrieve the instruction at the current instruction pointer. All we have to do is update our instruction execution pipeline to handle the new format.
+We now have a way to retrieve the instruction at the current instruction pointer. All we have to do is update our instruction execution pipeline to handle the new format.
 
 {% highlight lisp %}
 (defun execute-instruction (program instruction)
@@ -85,7 +87,7 @@ In the `execute-<instruction>` functions we need to fetch the parameter values d
     (set-parameter-value-by-mode program (fourth instruction) (+ input1 input2))))
 {% endhighlight %}
 
-The other instructions are implemented similarly. For the input value that the read/write instructions rely on I ended up just storing it as global state. I didn't want to have to pass it through all of these other functions and I wasn't sure of a better way to handle it. One idea I had was to have a top level `computer` function that encapsulated all of the other functions by defining them within that itself. Any necessary state could then be set within that function and still used by the encapsulated function. In the end I abandoned this since the state makes it nearly impossible to run/test those functions independently.
+The other instructions are implemented similarly. For the input value that the read/write instructions rely on I ended up just storing it as global state. I didn't want to have to pass it through all of these other functions and I wasn't sure of a better way to handle it. One idea I had was to have a top level `computer` function that encapsulated all of the other functions by defining them within itself. Any necessary state could then be set within that function and still used by the encapsulated function. In the end I abandoned this since the state makes it nearly impossible to run/test those functions independently.
 
 My full solution can be found on [Github][gh].
 
