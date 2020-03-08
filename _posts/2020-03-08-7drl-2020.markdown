@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "Seven Day Roguelike 2020"
+date:   2020-03-08 17:18:00 -0600
+categories: [programming, gamedev]
+tags: [programming, gamedev, 7drl, godot]
+---
+
+This year I decided to join the [Seven Day Roguelike (7DRL)][7drl] game jam. It's a week long event where participants spend time creating new roguelike games, individually or as a team. Games in this genre vary greatly but generally have the following elements:
+1) Permadeath - players are unable to respawn after death, they must start the game from scratch
+2) Procedural content - levels, enemies, and items are unique within each play of the game
+3) Turn based - gameplay is turn based, encouraging tactics over reflexes
+4) ASCII or tile graphics
+
+Some popular traditional roguelike games are NetHack, Angband, ADOM, and (of course) Rogue. Some newer games include DCSS, Brogue, and Cogmind.
+
+[7drl]: https://7drl.com/
