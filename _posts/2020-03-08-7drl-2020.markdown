@@ -14,4 +14,63 @@ This year I decided to join the [Seven Day Roguelike (7DRL)][7drl] game jam. It'
 
 Some popular traditional roguelike games are NetHack, Angband, ADOM, and (of course) Rogue. Some newer games include DCSS, Brogue, and Cogmind.
 
+I had never participated in a game jam and had very little experience with game development. This challenge gave me the opportunity to learn more about game development, roguelikes, and even a fun new algorithm. While I did not make as much progress on my game as I would have hoped, it was an enriching experience and has introduced me to a new potential hobby.
+
+# Getting Started With Godot
+
+When I tried to get into game development in the past I had used [Phaser][phaser], but scarcely accomplished more than the tutorials. Since I was hoping to use this jam as another introduction to game development, I decided to choose a more fully featured game engine that would give me the ability to make all sorts of games once I invested the time into learning it. [Godot][godot] is a free and open source game engine that allows you to create both 2d and 3d games. Although not as polished, it at least seems similar to the big players like Unity and Unreal Engine. It was also appealing to me that it was open source since I try to use free software as much as possible for my personal projects. There are a range of roguelike-specific game libraries ([rot.js][rotjs], [libtcod][libtcod]) that are often recommended for the game jam, but again, I wanted to learn something a little more general purpose than that.
+
+I was pleased to find a really nice set of [tutorials][godot-tutorials] were available on their website. These range from informational articles on specific topics to a step-by-step tutorial where you make a full game from scratch. I found that while they didn't use anything similar to a roguelike to demonstrate these concepts, they covered a wide enough range of material that I was much more prepared by the time I had finished them.
+
+Game development with Godot is centered around creating "scenes" that are made up of trees of nodes that have different properties. These scenes can define specific entities like the player or enemies, as well as something more abstract like a map or level in the game. Generally these are then composed into a game via "instancing". For example, if you were to define a Player scene you might start with a node called Area2D at the root which is used for 2d collision and physics. Then you would add children like a Sprite node for the characters image and a CollisionShape2D to define how it collides with other objects.
+
+```
+Player (Area2D)
+  |---Sprite
+  |---CollisionShape2D
+```
+
+An instance of this scene could then be added to a separate top-level scene that defines the game itself, which may have other nodes like the map and the heads-up display.
+
+```
+Main (Node)
+  |---Player
+  |---Map
+  |---HUD
+```
+
+You can also instance scenes programatically. You would use that strategy for things that may be defined dynamically like enemies that spawn at different intervals.
+
+Godot allows you to attach scripts to any node in a scene. These scripts basically define a class that extends whatever the type of the node is. They come with a variety of methods you can override related to the game loop such as `_init`, `_ready`, and `_process`. The documentation suggests you write your scripts using a language called GDScript which was created for the engine itself, but you can also use C# or C++. I decided to use GDScript because of its tight integration with the tooling even though I am more experienced with C#.
+
+Communication between different nodes is done using an event system that Godot calls "signals". There are predefined signals that nodes emit such as Area2D's `area_entered` and `area_exited` but developers can also define their own signals to emit and handle.
+
+With these basic building blocks we should be able to construct our entire game.
+
+# Entering the Labyrinth of the Lich
+
+After spending a day going through Godot tutorials, it was time to get started on the game. I had given a little thought to what I wanted to create and had landed on a vague premise involving a spaceship taken over by alien lifeforms where the player would need to navigate their way to the escape pods in order to survive. This idea hit a roadblock when I failed to find any free sets of sci-fi sprites I could use for the game art. I'm definitely not an artist and I did not want to be slowed down even further by choosing to make my own art. Since most roguelikes are set in a fantasy world, there was a lot of art I could use if I chose that setting.
+
+Then new game (which I would later title "Labyrinth of the Lich") would center around a wizard who must find his way through a series of mazes while encountering various enemies in a search for forbidden knowledge. The plan was to have a few levels of procedurally generated mazes with different types of enemies. This would culminate in a boss fight of some sort once the exit of last level ws reached. The player character would be limited in how many spells they could "know" at a time. Their starting spells would either be chosen at the beginning of the game or be randomly selected and then they could find additional spells to replace these within the game. These spells would be mix of offensive, defensive, and utility spells such as a fire AoE spell, a warding spell that splinters to damage attacking enemies, and invisibility.
+
+I knew my plans were ambitious for someone with no experience but they gave me a set of concepts to focus on. Much of what I would end up spending my time on would be the general gameplay mechanics of roguelikes rather than the specifics of my game.
+
+
+
+- introduce game
+- godot
+- tilemaps
+- movement
+- spell targeting + damage
+- enemy visibility
+- enemy pathfinding + melee
+- spell range + visibility
+- combat log?
+- future additions
+
 [7drl]: https://7drl.com/
+[phaser]: https://phaser.io/
+[godot]: https://godotengine.org/
+[godot-tutorials]: https://docs.godotengine.org/en/stable/getting_started/step_by_step/index.html
+[rotjs]: http://ondras.github.io/rot.js/hp/
+[libtcod]: https://github.com/libtcod/libtcod
