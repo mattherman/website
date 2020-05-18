@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Advent of Code - Day 3 (Part 1)"
-date:   2017-12-08 20:27:00 -0500
+date:   2019-12-08 20:27:00 -0500
 categories: [programming]
 tags: [aoc, lisp, programming]
 ---
