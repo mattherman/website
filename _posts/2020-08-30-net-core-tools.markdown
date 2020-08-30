@@ -2,7 +2,7 @@
 layout: post
 title:  ".NET Core Tools"
 date:   2020-08-30 15:13:00 -0600
-categories: [programming, gamedev]
+categories: [programming]
 tags: [programming, tools, dotnet]
 ---
 
