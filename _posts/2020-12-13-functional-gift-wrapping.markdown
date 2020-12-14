@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Functional Gift Wrapping"
-date:   2020-12-13 21:22:00 -0600
+date:   2020-12-13 17:22:00 -0600
 categories: [programming]
 tags: [programming, F#]
 ---
