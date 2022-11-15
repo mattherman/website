@@ -16,11 +16,7 @@ jobs:
         run: |
           chmod -R a+w .
           jekyll build --trace
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: site
-          path: _site
+          zip -r site.zip _site
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
