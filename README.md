@@ -14,4 +14,5 @@ To deploy, run the following from the server:
 ```
 wget <artifact_url>
 unzip site.zip -d /var/www/matthewherman.net
+rm site.zip
 ```
