@@ -18,7 +18,9 @@ jobs:
         run: |
           chmod -R a+w .
           jekyll build --trace
-          zip -r site.zip _site
+          cd _site
+          zip -r site.zip *
+          cd -
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
