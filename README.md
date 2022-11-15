@@ -12,7 +12,7 @@ Includes Github Actions that will build the site and archive the result.
 To deploy, run the following from the server:
 
 ```
-wget <artifact_url>
+wget https://github.com/mattherman/mattherman.github.io/releases/latest/download/site.zip
 unzip site.zip -d /var/www/matthewherman.net
 rm site.zip
 ```

@@ -9,8 +9,7 @@
 title: Matthew Herman
 email: mattherman11@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  A collection of tech-related ramblings documenting 
-  my attempts at learning to be a better software engineer.
+  A collection of tech-related ramblings and other things I'm interested in.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://www.matthewherman.net" # the base hostname & protocol for your site
 github_username: mattherman
