@@ -12,6 +12,10 @@ jobs:
       image: jekyll/builder:latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install build utilities
+        run: |
+          apt update
+          apt install zip
       - name: Jekyll build
         run: |
           chmod -R a+w .
