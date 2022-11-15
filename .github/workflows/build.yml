@@ -1,0 +1,21 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: jekyll/builder:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: jekyll build
+        run: jekyll build --trace
+      - name: archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: site
+          path: _site
