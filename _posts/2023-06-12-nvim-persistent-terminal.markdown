@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Creating a Persistent Terminal in Neovim"
-date:   2019-12-16 14:55:00 -0500
+date:   2023-06-12 19:40:00 -0500
 categories: [programming]
 tags: [programming neovim]
 ---
@@ -34,4 +34,4 @@ The function grabs the list of all buffers and looks for the first name that sta
 
 This worked great! The first time I run it Neovim will spin up a new terminal, but after that it will simply switch back to the original terminal with all of my output and history.
 
-So far I've been enjoying Neovim, especially with all of the really nice plugins people have created for it. I have found [telescope](https://github.com/nvim-telescope/telescope.nvim) and [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua) to be really useful. The fact that LSP support is built-in rather than provided by plugins is also nice. The API documentation, which is available online and with the `:help` command, is very detailed, but the thing I've been missing the most has been examples of how to do certain tasks like creating a terminal with `nvim_term_open`. I could dig through the source of other plugins to figure it out, but most are complex enough that finding the specific use case I need is difficult. Overall, it feels like (Neo)Vim is "sticking" a little bit more for me now and my actually become and editor that I use regularly.
+So far I've been enjoying Neovim, especially with all of the really nice plugins people have created for it. I have found [telescope](https://github.com/nvim-telescope/telescope.nvim) and [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua) to be really useful. The fact that LSP support is built-in rather than provided by plugins is also nice. The API documentation, which is available online and with the `:help` command, is very detailed, but the thing I've been missing the most has been examples of how to do certain tasks like creating a terminal with `nvim_term_open`. I could dig through the source of other plugins to figure it out, but most are complex enough that finding the specific use case I need is difficult. Overall, it feels like (Neo)Vim is "sticking" a little bit more for me now and may actually become an editor that I use regularly.
