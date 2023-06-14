@@ -17,7 +17,7 @@ The project includes Github Actions that will build the site and archive the res
 To deploy, copy the `deploy.sh` script to the server and run it:
 
 ```
-wget https://github.com/mattherman/website/blob/master/deploy.sh
+wget https://raw.githubusercontent.com/mattherman/website/master/deploy.sh
 chmod +x ./deploy.sh
 ./deploy.sh
 ```
