@@ -11,9 +11,10 @@ I was recently introduced to the [niri](https://github.com/niri-wm/niri) window 
 Since niri is only the window manager, you need some sort of "shell" to put it in in order to get all the other goodies you expect like a status bar, launcher, etc. One of the recommended shells is [Noctalia](https://noctalia.dev). I liked the look of it so I went with that one.
 
 First, I installed Noctalia using the instructions for Debian [here](https://docs.noctalia.dev/noctalia/getting-started/installation/?section=debian#debian):
-    - `wget https://pkg.noctalia.dev/deb/nickh-archive-keyring.deb && sudo dpkg -i nickh-archive-keyring.deb`
-    - `sudo wget -O /etc/apt/sources.list.d/noctalia-trixie.sources https://pkg.noctalia.dev/deb/noctalia-trixie.sources`
-    - `sudo apt update && sudo apt install noctalia`
+
+* `wget https://pkg.noctalia.dev/deb/nickh-archive-keyring.deb && sudo dpkg -i nickh-archive-keyring.deb`
+* `sudo wget -O /etc/apt/sources.list.d/noctalia-trixie.sources https://pkg.noctalia.dev/deb/noctalia-trixie.sources`
+* `sudo apt update && sudo apt install noctalia`
 
 Next, I installed niri, which was a little more complex since it is not yet packaged for Debian so I had to build it from source. There are instructions for [building it for development](https://niri-wm.github.io/niri/Getting-Started.html#building) in the docs which mostly worked for me.
 
