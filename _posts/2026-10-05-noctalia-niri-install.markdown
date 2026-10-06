@@ -47,4 +47,9 @@ sudo apt install alacritty fuzzel
 sudo dpkg -i target/debian/niri_26.4.0-1_amd64.deb
 ```
 
-That worked and I was able to log out, choose niri, and log back in to a working install of Noctalia and niri.
+The last thing I needed to do was configure niri to use Noctalia. To do that I edited `~/.config/niri/config.kdl` and added the following at the bottom of the file:
+```
+spawn-at-startup "noctalia"
+```
+
+After that I was able to log out, choose niri, and log back in to a working install of Noctalia and niri.
